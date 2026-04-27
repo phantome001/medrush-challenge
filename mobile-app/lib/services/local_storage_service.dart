@@ -34,6 +34,13 @@ class LocalStorageService {
     return jsonDecode(value) as List<dynamic>;
   }
 
+  Future<Map<String, dynamic>> readJson(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString(key);
+    if (value == null) return {};
+    return Map<String, dynamic>.from(jsonDecode(value));
+  }
+
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();

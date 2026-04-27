@@ -6,6 +6,7 @@ import '../providers/app_providers.dart';
 import '../widgets/disclaimer_banner.dart';
 import '../widgets/med_card.dart';
 import '../widgets/section_title.dart';
+import 'analytics_screen.dart';
 import 'badges_screen.dart';
 import 'clinical_cases_screen.dart';
 import 'first_aid_screen.dart';
@@ -33,6 +34,7 @@ class HomeScreen extends ConsumerWidget {
       ('Pharmacology Quiz', Icons.medication, const QuizCategoriesScreen(initialCategory: 'Pharmacology')),
       ('Pathology Quiz', Icons.biotech, const QuizCategoriesScreen(initialCategory: 'Pathology')),
       ('Leaderboard', Icons.leaderboard, const LeaderboardScreen()),
+      ('Analytics', Icons.analytics, const AnalyticsScreen()),
       ('Profile', Icons.person, const ProfileScreen()),
       ('Store', Icons.store, const StoreScreen()),
       ('Settings', Icons.settings, const SettingsScreen()),

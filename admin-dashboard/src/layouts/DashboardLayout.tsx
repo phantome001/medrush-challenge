@@ -30,6 +30,8 @@ const navItems = [
   { to: "/plans", label: "Plans", icon: CreditCard },
   { to: "/payments", label: "Payments", icon: CreditCard },
   { to: "/reports", label: "Reports", icon: BarChart3 },
+  { to: "/teacher-reports", label: "Teacher Reports", icon: GraduationCap },
+  { to: "/student-analytics", label: "Student Analytics", icon: BarChart3 },
   { to: "/settings", label: "Settings", icon: Settings },
   { to: "/notifications", label: "Notifications", icon: Bell }
 ];

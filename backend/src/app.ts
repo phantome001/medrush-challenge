@@ -19,6 +19,7 @@ import { quizRoutes } from "./routes/quizRoutes";
 import { reportRoutes } from "./routes/reportRoutes";
 import { storeRoutes } from "./routes/storeRoutes";
 import { subscriptionRoutes } from "./routes/subscriptionRoutes";
+import { uploadRoutes } from "./routes/uploadRoutes";
 import { userRoutes } from "./routes/userRoutes";
 
 export const app = express();
@@ -28,6 +29,7 @@ app.use(cors({ origin: env.CORS_ORIGIN.split(","), credentials: true }));
 app.use(express.json({ limit: "2mb" }));
 app.use(morgan(env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(rateLimit({ windowMs: 60_000, limit: 300 }));
+app.use("/uploads", express.static("uploads"));
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", name: "MedRush Challenge API" });
@@ -47,6 +49,7 @@ app.use("/api/leaderboard", leaderboardRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/store", storeRoutes);
+app.use("/api/uploads", uploadRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

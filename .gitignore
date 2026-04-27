@@ -30,6 +30,9 @@ yarn-error.log*
 .DS_Store
 .cache/
 coverage/
+backend/uploads/
+!backend/uploads/
+!backend/uploads/.gitkeep
 
 # IDE
 .vscode/

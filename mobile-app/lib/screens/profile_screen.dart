@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/app_providers.dart';
 import '../widgets/med_card.dart';
+import 'analytics_screen.dart';
 import 'badges_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -36,6 +37,8 @@ class ProfileScreen extends ConsumerWidget {
           ])),
           const SizedBox(height: 12),
           FilledButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BadgesScreen())), child: const Text('Badges and achievements')),
+          const SizedBox(height: 8),
+          OutlinedButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AnalyticsScreen())), child: const Text('View analytics and weak areas')),
         ],
       ),
     );

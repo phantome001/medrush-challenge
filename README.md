@@ -31,6 +31,7 @@ Then open:
 - Backend API: `http://localhost:4000/api/health`
 - API docs: `http://localhost:4000/api/docs`
 - Admin dashboard: `http://localhost:5173`
+- Public landing page: `http://localhost:5173/landing`
 
 Docker startup runs Prisma schema sync and seed data automatically for the demo.
 
@@ -97,6 +98,12 @@ Seed data resets demo tables and creates realistic medical questions, clinical c
 - JWT auth, refresh tokens, secure password hashing, RBAC, and tenant-scoped access.
 - Student mobile gameplay: onboarding, auth, home, daily challenge, quiz categories, quiz runner, clinical cases, anatomy, first aid, leaderboard, profile, badges, store, subscriptions, notifications, settings, RTL language support, result sharing copy, and offline mode.
 - Admin dashboard: login, super admin stats, institutions, users, teachers, students, quizzes, questions, clinical cases, categories, leaderboards, plans, payments, reports, settings, notifications, modals, search, tables, exports, and row actions.
+- Marketing landing page at `/landing` for presenting the product before logging into the admin dashboard.
+- Teacher reports with class summary, student accuracy, recent attempts, and quiz engagement.
+- Student analytics with weak categories, category accuracy, recent results, XP, streaks, and level progress.
+- Local secure image upload for educational question images, exposed through `/uploads`.
+- Stripe-ready checkout endpoint that returns demo checkout links until real `STRIPE_SECRET_KEY` is configured.
+- GitHub Actions CI for backend schema/build/tests and admin dashboard build.
 - Seed data: 1 super admin, 2 institutions, 3 teachers, 20 students, 11 categories, 10 quizzes, 100 questions, 30 clinical cases, 10 badges, and 3 subscription plans.
 
 ## Security and MVP stability
@@ -114,6 +121,19 @@ Seed data resets demo tables and creates realistic medical questions, clinical c
 
 - `DEMO_SCENARIO.md` explains how to present the MVP.
 - `screenshots-mockups/` contains admin screenshots and mobile mockups.
+
+## Optional Stripe-ready payment setup
+
+The MVP works without Stripe keys and returns demo checkout URLs. For real Stripe checkout sessions, set:
+
+```bash
+STRIPE_SECRET_KEY="sk_live_or_test_key"
+STRIPE_WEBHOOK_SECRET="whsec_optional_for_webhooks"
+STRIPE_SUCCESS_URL="https://your-admin-domain.com/payments?payment=success"
+STRIPE_CANCEL_URL="https://your-admin-domain.com/payments?payment=cancelled"
+```
+
+Then call `POST /api/payments/checkout` with a `planId`.
 
 ## Build Android APK
 
@@ -141,7 +161,7 @@ Open `ios/Runner.xcworkspace` in Xcode, configure signing, then archive/upload.
 2. Deploy `backend/` Docker image to Fly.io, Render, Railway, ECS, or Kubernetes.
 3. Deploy `admin-dashboard/` with `VITE_API_URL` pointing to the production API.
 4. Build mobile binaries with production API URL and submit to Google Play/App Store.
-5. Add Stripe/PayPal/local payment provider implementation behind the existing payment and subscription tables.
+5. Add production Stripe webhook handling or connect PayPal/local payment provider behind the existing payment and subscription tables.
 
 ## Production hardening checklist
 
@@ -149,12 +169,13 @@ Open `ios/Runner.xcworkspace` in Xcode, configure signing, then archive/upload.
 - Configure HTTPS, reverse proxy, and production CORS origins.
 - Move media uploads to S3/GCS or another object store.
 - Add a real email provider for verification and password reset.
-- Connect Stripe, PayPal, or local payment provider using the existing `Payment` and subscription plan models.
+- Configure Stripe webhook signature verification and provider webhooks for paid status updates.
 - Run `npx prisma migrate dev --name init` against a clean development database to generate a full production migration history before launch.
 
 ## Known limitations
 
-- Real Stripe/PayPal/local payment provider is not connected; the database and dashboard are payment-ready with manual tracking.
+- Stripe checkout is integration-ready and creates real sessions when `STRIPE_SECRET_KEY` is set, but production webhooks are not enabled yet.
+- Local image uploads are suitable for demo/local use; production should use object storage.
 - Email verification and password reset return provider-ready responses until an email service is configured.
 - Mobile screenshots in `screenshots-mockups/` are mockups because Flutter SDK/emulator is unavailable in this environment.
 - Media upload fields currently accept URLs/placeholders; production should connect object storage.

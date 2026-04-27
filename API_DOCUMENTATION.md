@@ -109,6 +109,17 @@ Gamification runs when quiz results are submitted:
 - `GET /payments`
 - `POST /payments`
 - `PATCH /payments/:id`
+- `POST /payments/checkout` — Stripe-ready checkout; returns demo URL if Stripe key is not configured.
+- `POST /payments/:id/confirm-demo` — mark demo/manual payment as paid.
+
+Checkout payload:
+
+```json
+{
+  "planId": "subscription_plan_id",
+  "institutionId": "optional_for_super_admin"
+}
+```
 
 ## Reports
 
@@ -116,6 +127,13 @@ Gamification runs when quiz results are submitted:
 - `GET /reports/institution`
 - `GET /reports/quizzes`
 - `GET /reports/performance`
+- `GET /reports/teacher`
+- `GET /reports/student-analytics`
+
+## Uploads
+
+- `POST /uploads/image` — multipart `image` upload for JPG, PNG, WEBP, or GIF up to 2MB.
+- `DELETE /uploads/:fileName` — delete a local uploaded demo image.
 
 ## Notifications
 

@@ -10,6 +10,7 @@ interface QuestionRow {
   questionText: string;
   difficulty: string;
   isPremium: boolean;
+  imageUrl?: string;
   category?: { name: string };
   optionA?: string;
   optionB?: string;
@@ -26,6 +27,7 @@ export const QuestionsPage = () => {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<QuestionRow | null>(null);
   const [formError, setFormError] = useState("");
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,7 +37,7 @@ export const QuestionsPage = () => {
       const payload = {
       categoryId: form.get("categoryId"),
       questionText: form.get("questionText"),
-      imageUrl: form.get("imageUrl"),
+      imageUrl: uploadedImageUrl || form.get("imageUrl"),
       optionA: form.get("optionA"),
       optionB: form.get("optionB"),
       optionC: form.get("optionC"),
@@ -62,7 +64,7 @@ export const QuestionsPage = () => {
 
   return (
     <>
-      <PageHeader title="Questions Management" subtitle="Multiple choice, true/false, image, and clinical-style question bank." action={<button className="btn" onClick={() => { setEditing(null); setOpen(true); }}>Add question</button>} />
+      <PageHeader title="Questions Management" subtitle="Multiple choice, true/false, image, and clinical-style question bank." action={<button className="btn" onClick={() => { setEditing(null); setUploadedImageUrl(""); setOpen(true); }}>Add question</button>} />
       {error ? <div className="card border-red-200 bg-red-50 text-red-700">{error}</div> : null}
       {loading ? <div className="card">Loading questions...</div> : <DataTable rows={data ?? []} columns={[
         { key: "questionText", label: "Question" },
@@ -71,7 +73,7 @@ export const QuestionsPage = () => {
         { key: "isPremium", label: "Access", render: (row) => row.isPremium ? "Premium" : "Free" }
       ]} actions={(row) => (
         <div className="flex justify-end gap-2">
-          <button className="btn-secondary" onClick={() => { setEditing(row); setOpen(true); }}>Edit</button>
+          <button className="btn-secondary" onClick={() => { setEditing(row); setUploadedImageUrl(row.imageUrl ?? ""); setOpen(true); }}>Edit</button>
           <button className="btn-secondary" onClick={() => remove(row.id)}>Delete</button>
         </div>
       )} />}
@@ -79,7 +81,21 @@ export const QuestionsPage = () => {
         <select name="categoryId" className="input" required>{(categories ?? []).map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select>
         <select name="difficulty" className="input" defaultValue={editing?.difficulty ?? "EASY"}><option>EASY</option><option>MEDIUM</option><option>HARD</option></select>
         <textarea name="questionText" className="input sm:col-span-2" placeholder="Question text" defaultValue={editing?.questionText} required />
-        <input name="imageUrl" className="input sm:col-span-2" placeholder="Optional image URL" />
+        <div className="sm:col-span-2 space-y-2">
+          <input name="imageUrl" className="input" placeholder="Optional image URL" defaultValue={uploadedImageUrl || editing?.imageUrl} />
+          <input
+            className="input"
+            type="file"
+            accept="image/*"
+            onChange={async (event) => {
+              const file = event.target.files?.[0];
+              if (!file) return;
+              const uploaded = await endpoints.uploadImage(file);
+              setUploadedImageUrl(uploaded.url);
+            }}
+          />
+          {uploadedImageUrl ? <p className="text-xs text-medgreen">Uploaded image ready: {uploadedImageUrl}</p> : null}
+        </div>
         <input name="optionA" className="input" placeholder="Option A" defaultValue={editing?.optionA} required />
         <input name="optionB" className="input" placeholder="Option B" defaultValue={editing?.optionB} required />
         <input name="optionC" className="input" placeholder="Option C" defaultValue={editing?.optionC} required />

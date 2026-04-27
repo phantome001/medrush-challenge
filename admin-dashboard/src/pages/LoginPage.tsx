@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { endpoints } from "../services/api";
 import { saveSession } from "../utils/auth";
@@ -42,6 +43,7 @@ export const LoginPage = () => {
           <input className="input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </label>
         <button className="btn w-full" disabled={loading}>{loading ? "Signing in..." : "Sign in"}</button>
+        <Link to="/landing" className="mt-4 block text-center text-sm font-semibold text-medblue">View public landing page</Link>
       </form>
     </div>
   );

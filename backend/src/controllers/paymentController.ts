@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { Role } from "@prisma/client";
+import Stripe from "stripe";
+import { env } from "../config/env";
 import { prisma } from "../database/prisma";
 import { AuthenticatedRequest } from "../models/authenticatedRequest";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -15,6 +17,11 @@ const schema = z.object({
   status: z.enum(["PENDING", "PAID", "FAILED", "REFUNDED"]).default("PENDING"),
   transactionReference: z.string().optional().nullable(),
   notes: z.string().optional().nullable()
+});
+
+const checkoutSchema = z.object({
+  planId: z.string(),
+  institutionId: z.string().optional().nullable()
 });
 
 export const listPayments = asyncHandler(async (req, res) => {
@@ -53,4 +60,62 @@ export const updatePayment = asyncHandler(async (req, res) => {
   const data = schema.partial().parse(req.body);
   const institutionId = data.institutionId !== undefined ? tenantScopedInstitutionId(authReq.user, data.institutionId) : undefined;
   res.json(await prisma.payment.update({ where: { id: req.params.id }, data: { ...data, institutionId } }));
+});
+
+export const createCheckoutSession = asyncHandler(async (req, res) => {
+  const authReq = req as AuthenticatedRequest;
+  const data = checkoutSchema.parse(req.body);
+  const plan = await prisma.subscriptionPlan.findUnique({ where: { id: data.planId } });
+  if (!plan || !plan.isActive) throw new AppError(404, "Subscription plan not found");
+
+  const institutionId = tenantScopedInstitutionId(authReq.user, data.institutionId ?? authReq.user?.institutionId ?? null);
+  const payment = await prisma.payment.create({
+    data: {
+      userId: authReq.user?.id,
+      institutionId,
+      amount: plan.price,
+      method: env.STRIPE_SECRET_KEY ? "STRIPE" : "DEMO_STRIPE",
+      status: "PENDING",
+      notes: `Checkout for ${plan.name}`
+    }
+  });
+
+  if (!env.STRIPE_SECRET_KEY) {
+    res.status(201).json({
+      mode: "demo",
+      paymentId: payment.id,
+      checkoutUrl: `${env.STRIPE_SUCCESS_URL}&paymentId=${payment.id}`,
+      message: "Stripe is ready. Add STRIPE_SECRET_KEY to create real checkout sessions."
+    });
+    return;
+  }
+
+  const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    success_url: `${env.STRIPE_SUCCESS_URL}&paymentId=${payment.id}`,
+    cancel_url: `${env.STRIPE_CANCEL_URL}&paymentId=${payment.id}`,
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          unit_amount: Math.round(Number(plan.price) * 100),
+          product_data: { name: `MedRush ${plan.name}`, description: `${plan.durationDays} days subscription` }
+        },
+        quantity: 1
+      }
+    ],
+    metadata: { paymentId: payment.id, planId: plan.id, institutionId: institutionId ?? "" }
+  });
+
+  await prisma.payment.update({ where: { id: payment.id }, data: { transactionReference: session.id } });
+  res.status(201).json({ mode: "stripe", paymentId: payment.id, sessionId: session.id, checkoutUrl: session.url });
+});
+
+export const confirmDemoPayment = asyncHandler(async (req, res) => {
+  const authReq = req as AuthenticatedRequest;
+  const payment = await prisma.payment.findUnique({ where: { id: req.params.id } });
+  if (!payment) throw new AppError(404, "Payment not found");
+  assertCanManageInstitutionId(authReq.user, payment.institutionId);
+  res.json(await prisma.payment.update({ where: { id: payment.id }, data: { status: "PAID", transactionReference: payment.transactionReference ?? `demo-${Date.now()}` } }));
 });

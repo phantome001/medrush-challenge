@@ -10,3 +10,5 @@ reportRoutes.get("/platform", requireRoles(Role.SUPER_ADMIN), controller.platfor
 reportRoutes.get("/institution", requireRoles(Role.SUPER_ADMIN, Role.INSTITUTION_ADMIN, Role.TEACHER), controller.institutionStats);
 reportRoutes.get("/quizzes", requireRoles(Role.SUPER_ADMIN, Role.INSTITUTION_ADMIN, Role.TEACHER), controller.quizStats);
 reportRoutes.get("/performance", requireRoles(Role.SUPER_ADMIN, Role.INSTITUTION_ADMIN, Role.TEACHER), controller.performanceAnalytics);
+reportRoutes.get("/student-analytics", controller.studentAnalytics);
+reportRoutes.get("/teacher", requireRoles(Role.SUPER_ADMIN, Role.INSTITUTION_ADMIN, Role.TEACHER), controller.teacherReports);

@@ -32,6 +32,11 @@ services:
       PORT: 4000
       CORS_ORIGIN: http://localhost:5173
       NODE_ENV: development
+      PUBLIC_API_URL: http://localhost:4000
+      STRIPE_SECRET_KEY:
+      STRIPE_WEBHOOK_SECRET:
+      STRIPE_SUCCESS_URL: http://localhost:5173/payments?payment=success
+      STRIPE_CANCEL_URL: http://localhost:5173/payments?payment=cancelled
     ports:
       - "4000:4000"
     command: sh -c "npx prisma db push && npm run seed:prod && npm run start"

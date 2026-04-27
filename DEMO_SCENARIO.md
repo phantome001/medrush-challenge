@@ -11,6 +11,7 @@ docker compose up --build
 Open:
 
 - Admin dashboard: `http://localhost:5173`
+- Landing page: `http://localhost:5173/landing`
 - Backend health: `http://localhost:4000/api/health`
 - API docs: `http://localhost:4000/api/docs`
 
@@ -23,14 +24,16 @@ Login:
 
 Show:
 
-1. Dashboard stats: institutions, users, active subscriptions, quizzes, questions, revenue placeholder.
-2. Institutions page: create an institution, edit it, suspend it, and explain tenant isolation.
-3. Users page: filter/search students and teachers, add a teacher/student, suspend an account safely.
-4. Quizzes page: create/edit/archive/delete demo quizzes.
-5. Questions page: create/edit/delete MCQ questions with explanations and premium/free flag.
-6. Clinical cases page: create/edit/delete educational clinical vignettes.
-7. Payments and subscription plans: show manual payment-ready workflow.
-8. Reports: show active students, quiz activity, category performance.
+1. Landing page: present the product story and click into admin login.
+2. Dashboard stats: institutions, users, active subscriptions, quizzes, questions, revenue placeholder.
+3. Institutions page: create an institution, edit it, suspend it, and explain tenant isolation.
+4. Users page: filter/search students and teachers, add a teacher/student, suspend an account safely.
+5. Quizzes page: create/edit/archive/delete demo quizzes.
+6. Questions page: create/edit/delete MCQ questions, upload an image, add explanations, and set premium/free flag.
+7. Clinical cases page: create/edit/delete educational clinical vignettes.
+8. Payments and subscription plans: show manual records and Stripe-ready checkout demo.
+9. Teacher Reports: show class summary, student accuracy, and recent attempts.
+10. Student Analytics: show weak categories and individual performance.
 
 ## 3. Teacher / Institution demo
 
@@ -55,8 +58,9 @@ Show:
 3. Quiz Categories: choose Anatomy/Pharmacology/etc.
 4. Clinical Cases: read educational case with disclaimer, answer diagnosis-style question.
 5. Leaderboard and Profile: XP ranking, achievements, stats.
-6. Subscription screen: Free, Premium, Institution plan comparison.
-7. Settings: switch Arabic/French/English, dark mode, offline demo mode.
+6. Analytics screen: show weak categories and recent performance.
+7. Subscription screen: Free/Premium/Institution plans with checkout-ready action.
+8. Settings: switch Arabic/French/English, dark mode, offline demo mode.
 
 ## 5. Offline fallback demo
 
