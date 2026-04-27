@@ -1,0 +1,302 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  INSTITUTION_ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum InstitutionStatus {
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+}
+
+enum SubscriptionStatus {
+  FREE
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum QuizStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LeaderboardPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  INSTITUTION
+  GLOBAL
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum NotificationType {
+  DAILY_CHALLENGE
+  NEW_QUIZ
+  SUBSCRIPTION
+  BADGE
+  SYSTEM
+}
+
+enum ClinicalGender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+model User {
+  id                   String             @id @default(cuid())
+  fullName             String
+  email                String             @unique
+  passwordHash         String
+  role                 Role               @default(STUDENT)
+  avatar               String?
+  institutionId        String?
+  institution          Institution?       @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  specialty            String?
+  studyYear            String?
+  xp                   Int                @default(0)
+  level                Int                @default(1)
+  coins                Int                @default(0)
+  streak               Int                @default(0)
+  bestStreak           Int                @default(0)
+  lastActivityDate     DateTime?
+  totalCorrectAnswers  Int                @default(0)
+  totalWrongAnswers    Int                @default(0)
+  totalQuizzes         Int                @default(0)
+  isActive             Boolean            @default(true)
+  subscriptionStatus   SubscriptionStatus @default(FREE)
+  createdQuizzes       Quiz[]             @relation("CreatedQuizzes")
+  createdClinicalCases ClinicalCase[]      @relation("CreatedClinicalCases")
+  quizResults          QuizResult[]
+  badges               UserBadge[]
+  leaderboardEntries   Leaderboard[]
+  payments             Payment[]
+  notifications        Notification[]
+  refreshTokens        RefreshToken[]
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+}
+
+model Institution {
+  id                 String             @id @default(cuid())
+  name               String
+  logo               String?
+  email              String?
+  phone              String?
+  country            String
+  city               String
+  address            String?
+  institutionCode    String             @unique
+  subscriptionPlanId String?
+  subscriptionPlan   SubscriptionPlan?  @relation(fields: [subscriptionPlanId], references: [id], onDelete: SetNull)
+  subscriptionStart  DateTime?
+  subscriptionEnd    DateTime?
+  maxStudents        Int                @default(0)
+  maxTeachers        Int                @default(0)
+  status             InstitutionStatus  @default(ACTIVE)
+  primaryColor       String             @default("#2563eb")
+  secondaryColor     String             @default("#10b981")
+  users              User[]
+  quizzes            Quiz[]
+  clinicalCases      ClinicalCase[]
+  leaderboards       Leaderboard[]
+  payments           Payment[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+}
+
+model SubscriptionPlan {
+  id            String        @id @default(cuid())
+  name          String        @unique
+  price         Decimal       @default(0)
+  durationDays  Int           @default(30)
+  maxStudents   Int           @default(0)
+  maxTeachers   Int           @default(0)
+  features      String[]
+  isActive      Boolean       @default(true)
+  institutions  Institution[]
+  createdAt     DateTime      @default(now())
+}
+
+model Category {
+  id          String         @id @default(cuid())
+  name        String         @unique
+  description String?
+  icon        String?
+  color       String         @default("#2563eb")
+  isActive    Boolean        @default(true)
+  quizzes     Quiz[]
+  questions   Question[]
+}
+
+model Quiz {
+  id            String       @id @default(cuid())
+  title         String
+  description   String?
+  categoryId    String
+  category      Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  institutionId String?
+  institution   Institution? @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  difficulty    Difficulty   @default(EASY)
+  isPremium     Boolean      @default(false)
+  timeLimit     Int          @default(60)
+  status        QuizStatus   @default(DRAFT)
+  createdBy     String?
+  creator       User?        @relation("CreatedQuizzes", fields: [createdBy], references: [id], onDelete: SetNull)
+  questions     Question[]
+  results       QuizResult[]
+  createdAt     DateTime     @default(now())
+}
+
+model Question {
+  id            String     @id @default(cuid())
+  quizId        String?
+  quiz          Quiz?      @relation(fields: [quizId], references: [id], onDelete: SetNull)
+  categoryId    String
+  category      Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  questionText  String
+  imageUrl      String?
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String
+  explanation   String
+  difficulty    Difficulty @default(EASY)
+  isPremium     Boolean    @default(false)
+  tags          String[]
+  createdAt     DateTime   @default(now())
+}
+
+model ClinicalCase {
+  id            String         @id @default(cuid())
+  title         String
+  patientAge    Int
+  patientGender ClinicalGender
+  symptoms      String
+  history       String
+  physicalExam  String
+  labResults    String?
+  question      String
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String
+  explanation   String
+  learningNote  String
+  specialty     String
+  difficulty    Difficulty     @default(EASY)
+  isPremium     Boolean        @default(false)
+  institutionId String?
+  institution   Institution?   @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  createdBy     String?
+  creator       User?          @relation("CreatedClinicalCases", fields: [createdBy], references: [id], onDelete: SetNull)
+  createdAt     DateTime       @default(now())
+}
+
+model QuizResult {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId         String?
+  quiz           Quiz?    @relation(fields: [quizId], references: [id], onDelete: SetNull)
+  score          Int
+  correctAnswers Int
+  wrongAnswers   Int
+  xpGained       Int
+  coinsGained    Int
+  completedAt    DateTime @default(now())
+}
+
+model Badge {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  description String
+  icon        String?
+  condition   String
+  users       UserBadge[]
+}
+
+model UserBadge {
+  id       String   @id @default(cuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId  String
+  badge    Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
+
+model Leaderboard {
+  id            String            @id @default(cuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  institutionId String?
+  institution   Institution?      @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  score         Int
+  period        LeaderboardPeriod
+  rank          Int
+  createdAt     DateTime          @default(now())
+}
+
+model Payment {
+  id                   String        @id @default(cuid())
+  userId               String?
+  user                 User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  institutionId        String?
+  institution          Institution?  @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  amount               Decimal
+  method               String
+  status               PaymentStatus @default(PENDING)
+  transactionReference String?
+  notes                String?
+  createdAt            DateTime      @default(now())
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      NotificationType @default(SYSTEM)
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  tokenHash String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+}

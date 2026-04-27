@@ -1,0 +1,4 @@
+-- Initial schema is managed by prisma/schema.prisma.
+-- For first local/Docker startup, use `prisma db push`.
+-- Production deployments can replace this with generated migrations using:
+-- `npx prisma migrate dev --name init`.

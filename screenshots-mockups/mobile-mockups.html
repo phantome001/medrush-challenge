@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MedRush Mobile Mockups</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Inter, Arial, sans-serif; background: #eef6ff; color: #0f172a; }
+      .page { min-height: 100vh; padding: 32px; display: grid; grid-template-columns: repeat(3, 390px); gap: 28px; justify-content: center; }
+      .phone { width: 390px; height: 844px; background: #f8fafc; border: 12px solid #0f172a; border-radius: 48px; overflow: hidden; box-shadow: 0 24px 60px rgba(15,23,42,.25); position: relative; }
+      .status { height: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 12px; font-weight: 700; background: #fff; }
+      .content { height: calc(100% - 34px); overflow: hidden; padding: 18px; }
+      h1 { margin: 0; font-size: 26px; line-height: 1.1; }
+      h2 { margin: 0; font-size: 20px; }
+      p { color: #64748b; line-height: 1.4; }
+      .logo { width: 86px; height: 86px; background: linear-gradient(135deg,#2563eb,#10b981); border-radius: 26px; display:flex; align-items:center; justify-content:center; color:white; font-size:42px; margin: 90px auto 24px; }
+      .btn { background:#2563eb; color:#fff; border-radius:18px; padding:14px; text-align:center; font-weight:800; margin-top:16px; }
+      .card { background:#fff; border-radius:24px; padding:18px; margin:12px 0; box-shadow: 0 10px 25px rgba(15,23,42,.06); }
+      .hero { background: linear-gradient(135deg,#2563eb,#0ea5e9); color:#fff; border-radius:28px; padding:22px; margin:14px 0; }
+      .hero p { color:#dbeafe; margin:8px 0 0; }
+      .progress { height:9px; background:rgba(255,255,255,.25); border-radius:99px; overflow:hidden; margin:14px 0; }
+      .bar { height:100%; width:62%; background:#10b981; }
+      .grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
+      .tile { background:#fff; border-radius:22px; padding:18px 12px; text-align:center; font-weight:800; box-shadow: 0 10px 25px rgba(15,23,42,.06); }
+      .icon { font-size:28px; display:block; margin-bottom:8px; }
+      .pill { display:inline-block; border-radius:99px; background:#dbeafe; color:#1d4ed8; padding:6px 10px; font-size:12px; font-weight:800; }
+      .option { border:2px solid #e2e8f0; border-radius:18px; padding:14px; margin:10px 0; background:#fff; }
+      .correct { border-color:#10b981; background:#ecfdf5; }
+      .tabs { display:flex; gap:7px; overflow:hidden; margin:12px 0; }
+      .tab { background:#e2e8f0; padding:7px 10px; border-radius:99px; font-size:12px; font-weight:800; white-space:nowrap; }
+      .active { background:#2563eb; color:#fff; }
+      .row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid #eef2f7; }
+      .avatar { width:42px; height:42px; border-radius:50%; background:#dbeafe; display:flex; align-items:center; justify-content:center; color:#2563eb; font-weight:900; }
+      .bottom { position:absolute; left:18px; right:18px; bottom:18px; background:#fff; border-radius:24px; padding:12px; display:flex; justify-content:space-around; box-shadow:0 10px 25px rgba(15,23,42,.12); }
+      .small { font-size:12px; color:#64748b; }
+      .rtl { direction: rtl; text-align:right; }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="logo">⚕</div>
+          <h1 style="text-align:center">MedRush Challenge</h1>
+          <p style="text-align:center">Learn medical science through daily challenges, clinical cases, XP, streaks, and leaderboards.</p>
+          <div class="card">
+            <div class="pill">Student login</div>
+            <p>Email</p>
+            <div class="option">student@medrush.com</div>
+            <p>Password</p>
+            <div class="option">••••••••••••</div>
+            <div class="btn">Login</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <h1>Hi, Test Student</h1>
+          <p>Ready for today’s revision?</p>
+          <div class="hero">
+            <h2>Level 2</h2>
+            <div class="progress"><div class="bar"></div></div>
+            <p>840 XP • 140 coins • 6 day streak</p>
+            <p>Subscription: ACTIVE</p>
+          </div>
+          <div class="card"><b>Daily Challenge</b><p>10 random questions with XP, coins, and streak rewards.</p></div>
+          <h2>Quick modes</h2>
+          <div class="grid">
+            <div class="tile"><span class="icon">⚡</span>Daily Challenge</div>
+            <div class="tile"><span class="icon">🩺</span>Clinical Cases</div>
+            <div class="tile"><span class="icon">🦴</span>Anatomy Quiz</div>
+            <div class="tile"><span class="icon">🚑</span>First Aid</div>
+            <div class="tile"><span class="icon">💊</span>Pharmacology</div>
+            <div class="tile"><span class="icon">🏆</span>Leaderboard</div>
+          </div>
+          <div class="bottom"><span>Home</span><span>Quiz</span><span>Rank</span><span>Profile</span></div>
+        </div>
+      </section>
+
+      <section class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <h1>Daily Challenge</h1>
+          <p>Question 4/10 • Score 3 • Timer 42s</p>
+          <div class="progress" style="background:#e2e8f0"><div class="bar" style="width:40%"></div></div>
+          <div class="card">
+            <h2>Which option best matches the described cardiovascular concept?</h2>
+            <div class="option">A. Option A</div>
+            <div class="option correct">B. Option B</div>
+            <div class="option">C. Option C</div>
+            <div class="option">D. Option D</div>
+          </div>
+          <div class="card"><b>Explanation</b><p>Educational explanation after answer. Not medical advice.</p></div>
+          <div class="btn">Next</div>
+        </div>
+      </section>
+
+      <section class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <h1>Clinical Case</h1>
+          <div class="card small">This app is for educational purposes only and does not replace professional medical advice.</div>
+          <div class="card">
+            <h2>Patient: 42 years • Female</h2>
+            <p>Symptoms: Short educational symptom vignette for revision.</p>
+            <p>History: Relevant educational medical history placeholder.</p>
+            <p>Physical signs: Focused educational exam findings.</p>
+            <p>Lab results: Placeholder</p>
+          </div>
+          <h2>Most likely diagnosis?</h2>
+          <div class="option">A. Diagnosis A</div>
+          <div class="option">B. Diagnosis B</div>
+          <div class="option correct">C. Diagnosis C</div>
+          <div class="option">D. Diagnosis D</div>
+        </div>
+      </section>
+
+      <section class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <h1>Leaderboard</h1>
+          <div class="tabs"><div class="tab active">Daily</div><div class="tab">Weekly</div><div class="tab">Monthly</div><div class="tab">Institution</div><div class="tab">Global</div></div>
+          <div class="card">
+            <div class="row"><div class="avatar">1</div><div style="flex:1"><b>Student 20</b><div class="small">Level 5 • Top badge</div></div><b>2400 XP</b></div>
+            <div class="row"><div class="avatar">2</div><div style="flex:1"><b>Test Student</b><div class="small">Level 2 • 7-day streak</div></div><b>840 XP</b></div>
+            <div class="row"><div class="avatar">3</div><div style="flex:1"><b>Student 14</b><div class="small">Level 3</div></div><b>1680 XP</b></div>
+          </div>
+          <h2>Profile stats</h2>
+          <div class="grid">
+            <div class="tile">840<br><span class="small">Total XP</span></div>
+            <div class="tile">140<br><span class="small">Coins</span></div>
+            <div class="tile">6<br><span class="small">Streak</span></div>
+            <div class="tile">82%<br><span class="small">Accuracy</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content rtl">
+          <h1>الإعدادات</h1>
+          <div class="card">
+            <div class="row"><b>اللغة</b><span>العربية</span></div>
+            <div class="row"><b>الوضع الداكن</b><span>مفعّل</span></div>
+            <div class="row"><b>الصوت</b><span>مفعّل</span></div>
+            <div class="row"><b>الإشعارات</b><span>مفعّلة</span></div>
+            <div class="row"><b>تغيير كلمة المرور</b><span>›</span></div>
+            <div class="row"><b>سياسة الخصوصية</b><span>›</span></div>
+            <div class="row"><b>تسجيل الخروج</b><span>›</span></div>
+          </div>
+          <div class="card">يدعم التطبيق الإنجليزية والعربية RTL والفرنسية.</div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
